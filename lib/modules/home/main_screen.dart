@@ -101,7 +101,7 @@ Widget MainScreen(context, controller) {
                               width: 150,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
-                                  color: Colors.white,
+                                  color: Color(0xFFF8F8EE),
                                   border:
                                       Border.all(color: Colors.grey.shade400)),
                               child: InkWell(
@@ -207,9 +207,11 @@ Widget MainScreen(context, controller) {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(5.0),
                               child: InkWell(
-                                onTap: () => cubit.changeFav((index * 2) + idx),
+                                onTap: () {
+                                  cubit.changeFav((index * 2) + idx, context);
+                                },
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: [
@@ -217,11 +219,7 @@ Widget MainScreen(context, controller) {
                                       backgroundColor: Colors.black26,
                                       radius: 18,
                                     ),
-                                    cubit
-                                            .homeData!
-                                            .data!
-                                            .products[(index * 2) + idx]
-                                            .inFavourite
+                                    cubit.favItemsIDs.contains(cubit.homeData!.data!.products[(index * 2) + idx].id)
                                         ? const Icon(
                                             Icons.favorite,
                                             color: Colors.red,
@@ -236,19 +234,19 @@ Widget MainScreen(context, controller) {
                             ),
                             Align(
                               alignment: Alignment.bottomRight,
-                              child: Container(
-                                height: 36,
-                                width: 44,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: Colors.grey.shade400,
+                              child: InkWell(
+                                onTap: () => cubit.addDeleteCartItems(id : cubit.homeData!.data!.products[(index * 2) + idx].id ,context: context, fromCartSaved: false),
+                                child: Container(
+                                  height: 40,
+                                  width: 45,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.orangeAccent,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(20.0),
+                                        bottomRight: Radius.circular(20.0)),
                                   ),
-                                  borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(20.0),
-                                      bottomRight: Radius.circular(20.0)),
+                                  child: const Icon(Icons.add),
                                 ),
-                                child: const Icon(Icons.add),
                               ),
                             )
                           ],

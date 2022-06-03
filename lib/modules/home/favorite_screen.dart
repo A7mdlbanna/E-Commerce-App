@@ -7,22 +7,73 @@ Widget FavScreen(context, controller) {
 
   AppCubit cubit = AppCubit.get(context);
   FavItems? favItems = cubit.favItems;
-  return ListView.separated(
-    itemBuilder: (context, index) => Row(
-      children: [
-        Image.network(favItems!.data!.data![index].product!.image),
-        Column(
+  return favItems!.data!.data.length == 0
+    ? Center(child: Text('there are no saved items, go and save some', style: TextStyle(color: Colors.grey.shade400, fontSize: 16),),)
+    : ListView.separated(
+      controller: controller,
+      physics: const BouncingScrollPhysics(),
+      itemBuilder: (context, index) => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
           children: [
-            Text(favItems.data!.data![index].product!.name),
-            Text('${favItems.data!.data![index].product!.price}'),
+            Row(
+              children: [
+                Image.network(favItems.data!.data[index].product!.image, height: 100, width: 100,),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(favItems.data!.data[index].product!.name, maxLines: 2, overflow: TextOverflow.ellipsis,),
+                      SizedBox(height: 10,),
+                      Text('EGP ${favItems.data!.data[index].product!.price}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                InkWell(
+                  splashColor: Colors.transparent,
+                  onTap: () {
+                    cubit.changeFavID(favItems.data!.data[index].product!.id);
+                    cubit.addDeleteFavItems(id: favItems.data!.data[index].product!.id, context: context, showFavSnack: true, fromFavSaved: true);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 12.0, top: 12),
+                    child: Row(
+                      children: [
+                        Icon(Icons.delete_outline, color: Colors.orange.shade600,),
+                        Text('REMOVE', style: TextStyle(color: Colors.orange.shade600, fontWeight: FontWeight.bold),)
+                      ],
+                    ),
+                  ),
+                ),
+                Spacer(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: Material(
+                    shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(10.0) ),
+                    elevation: 5.0,
+                    color: Colors.orange.shade600,
+                    clipBehavior: Clip.antiAlias,
+                    child: MaterialButton(
+                      onPressed: (){},
+                      child: Row(
+                        children: [
+                          Text('ADD TO CART', style: TextStyle(color: Colors.white),),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ],
         ),
-
-      ],
-    ),
-    separatorBuilder: (context, index) => SizedBox(
-      height: 10,
-    ),
-    itemCount: 10,
-  );
+      ),
+      separatorBuilder: (context, index) => Divider(thickness: 1.4, height: 10,),
+      itemCount: favItems.data!.data.length,
+    );
 }

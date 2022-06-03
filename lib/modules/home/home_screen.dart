@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:shop_app/modules/home/account_screen.dart';
 import 'package:shop_app/modules/home/cart_screen.dart';
+import '../../shared/constants.dart';
 import '../../shared/cubit/app_cubit/app_cubit.dart';
 import '../../shared/cubit/app_cubit/app_states.dart';
 import '../home/favorite_screen.dart';
@@ -18,13 +19,28 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    doneGetData = true;
     PageController pageController = PageController(initialPage: 0);
+
+    // List<List<dynamic>> actions = [
+    //   [
+    //
+    //   ],
+    //   [
+    //
+    //   ],
+    // ];
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state){},
       builder: (context, state) {
         AppCubit cubit = AppCubit.get(context);
         return Scaffold(
-          appBar: AppBar(),
+          backgroundColor: Color(0xFFF8F8EE),
+          appBar: AppBar(
+            backgroundColor: Color(0xFFF8F8EE),
+            title: Text(cubit.currentTitle),
+            // actions: actions[0],
+          ),
           body: BottomBar(
             showIcon: false,
             borderRadius: BorderRadius.circular(500),
@@ -32,10 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
             curve: Curves.decelerate,
             width: MediaQuery.of(context).size.width * 0.88,
             barColor: Colors.white,
+
             body: (context, controller) => PageView(
               onPageChanged: (index) => cubit.changeIndex(index, pageController),
               controller: pageController,
-              children: <Widget> [
+              children: [
                 MainScreen(context, controller),
                 FavScreen(context, controller),
                 CartScreen(context, controller),
@@ -63,12 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   type: BottomNavigationBarType.fixed,
                   selectedItemColor: const Color.fromARGB(255, 8, 60, 82),
                   unselectedItemColor: const Color.fromARGB(255, 103, 108, 128),
-                  items: const [
-                    BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/shop.png'), size: 20,), label: 'home'),
-                    BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/save_out.png'), size: 20), label: 'saved'),
-                    BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/shopping-cart.png'), size: 20), label: 'cart'),
-                    BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/shopping-bag.png'), size: 20), label: 'account'),
-                  ],
+                  items: cubit.navItems[cubit.currentIndex],
                 ),
               ),
             ),

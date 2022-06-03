@@ -1,4 +1,4 @@
-
+////////////////////Home Model//////////////////////////
 class HomeModel{
   late bool status;
   HomeData? data;
@@ -53,6 +53,9 @@ class ProductsModel{
   }
 }
 
+
+////////////////////Fav Model//////////////////////////
+// here is a model for favourite items:
 // this is a complete model of favorite items.
 class FavItems {
   late bool status;
@@ -67,7 +70,7 @@ class FavItems {
 }
 class FavData {
   late int currentPage;
-  List<FavItemsData>? data;
+  List<FavItemsData> data = [];
 
 ///////////we don't need these now:)//////////
   int? from;
@@ -83,8 +86,8 @@ class FavData {
 //////////////////////Constructor///////////////////////////
   FavData.fromJSON(Map<String, dynamic> json){
     currentPage = json['current_page'];
-    data = json['data'].forEach((e){
-      data?.add(FavItemsData.fromJSON(e));
+    json['data'].forEach((e){
+      data.add(FavItemsData.fromJSON(e));
     });
     from = json['from'];
     to = json['to'];
@@ -100,23 +103,23 @@ class FavData {
 }
 class FavItemsData {
   late int mainId;
-  Product? product;
+  FavProduct? product;
 
   FavItemsData.fromJSON(Map<String, dynamic> json){
     mainId = json['id'];
-    product = Product.fromJSON(json['product']);
+    product = FavProduct.fromJSON(json['product']);
   }
 }
-class Product {
+class FavProduct {
   late int id;
-  late int price;
-  late int oldPrice;
+  late dynamic price;
+  late dynamic oldPrice;
   late int discount;
   late String image;
   late String name;
   late String description;
 
-  Product.fromJSON(Map<String, dynamic> json){
+  FavProduct.fromJSON(Map<String, dynamic> json){
     id = json['id'];
     price = json['price'];
     oldPrice = json['old_price'];
@@ -127,38 +130,142 @@ class Product {
   }
 }
 
-// and i made another one that stores the {id, price, oldPrice, discount, image}.
+//save/unSave products
 class FavItemsBeta{
   late bool status;
   late String message;
-  ProductsData? data;
+  FavProductsData? data;
   FavItemsBeta.fromJSON(Map<String, dynamic> json){
     status = json['status'];
     message = json['message'];
-    data = ProductsData.fromJSON(json['data']);
+    data = FavProductsData.fromJSON(json['data']);
   }
 }
-class ProductsData{
+class FavProductsData{
   late int id;
-  Products? products;
+  FavProducts? products;
 
-  ProductsData.fromJSON(Map<String, dynamic> json){
+  FavProductsData.fromJSON(Map<String, dynamic> json){
     id = json['id'];
-    products = Products.fromJSON(json['product']);
+    products = FavProducts.fromJSON(json['product']);
   }
 }
-class Products{
+class FavProducts{
   late int id;
   late dynamic price;
   late dynamic oldPrice;
   late int discount;
   late String image;
 
-  Products.fromJSON(Map<String, dynamic> json){
+  FavProducts.fromJSON(Map<String, dynamic> json){
     id = json['id'];
     price = json['price'];
     oldPrice = json['old_price'];
     discount = json['discount'];
     image = json['image'];
+  }
+}
+
+
+////////////////////Cart Model//////////////////////////
+// here is a model for cart items:
+class CartItems {
+  late bool status;
+  String? message;
+  CartData? data;
+
+  CartItems.fromJSON(Map<String, dynamic> json){
+    status = json['status'];
+    message = json['message'];
+    data = CartData.fromJSON(json['data']);
+  }
+}
+class CartData {
+  late dynamic subTotal;
+  late dynamic total;
+  List<CartItemsData> cartItems = [];
+
+  CartData.fromJSON(Map<String, dynamic> json){
+    subTotal = json['sub_total'];
+    total = json['total'];
+    json['cart_items'].forEach((item){
+      cartItems.add(CartItemsData.fromJSON(item));
+    });
+
+  }
+}
+class CartItemsData {
+  late int mainId;
+  late int quantity;
+  CartProduct? product;
+
+  CartItemsData.fromJSON(Map<String, dynamic> json){
+    mainId = json['id'];
+    quantity = json['quantity'];
+    product = CartProduct.fromJSON(json['product']);
+  }
+}
+class CartProduct {
+  late int id;
+  late dynamic price;
+  late dynamic oldPrice;
+  late dynamic discount;
+  String? image;
+  String? name;
+  String? description;
+  late bool inFavourite;
+  late bool inCart;
+  CartProduct.fromJSON(Map<String, dynamic> json){
+    id = json['id'];
+    price = json['price'];
+    oldPrice = json['old_price'];
+    discount = json['discount'];
+    image = json['image'];
+    name = json['name'];
+    description = json['description'];
+    inFavourite = json['in_favorites'];
+    inCart = json['in_cart'];
+  }
+}
+
+//add and delete products to/from cart
+class CartItemsBeta{
+  late bool status;
+  String? message;
+  CartProductsData? data;
+  CartItemsBeta.fromJSON(Map<String, dynamic> json){
+    status = json['status'];
+    message = json['message'];
+    data = CartProductsData.fromJSON(json['data']);
+  }
+}
+class CartProductsData{
+  late int id;
+  late int quantity;
+  CartProducts? products;
+
+  CartProductsData.fromJSON(Map<String, dynamic> json){
+    id = json['id'];
+    quantity = json['quantity'];
+    products = CartProducts.fromJSON(json['product']);
+  }
+}
+class CartProducts{
+  late int id;
+  late dynamic price;
+  late dynamic oldPrice;
+  late int discount;
+  String? image;
+  String? name;
+  String? description;
+
+  CartProducts.fromJSON(Map<String, dynamic> json){
+    id = json['id'];
+    price = json['price'];
+    oldPrice = json['old_price'];
+    discount = json['discount'];
+    image = json['image'];
+    name = json['name'];
+    description = json['description'];
   }
 }

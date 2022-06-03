@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-ThemeData lightMode =   ThemeData(
-  // primaryColor: Colors.white,
-  scaffoldBackgroundColor: Colors.white,
+ThemeData lightMode = ThemeData(
+  primaryColor: Color(0xFFF9F8F4),
+
+  scaffoldBackgroundColor:  Color(0xFFF9F8F4),
   appBarTheme: const AppBarTheme(
     titleSpacing: 20.0,
     systemOverlayStyle: SystemUiOverlayStyle(
-      statusBarColor: Colors.white,
+      statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
     ),
-    backgroundColor: Colors.white,
+    backgroundColor:  Color(0xFFF9F8F4),
     elevation: 0.0,
     titleTextStyle: TextStyle(
       color: Colors.black,

@@ -11,7 +11,7 @@ ThemeData darkMode =   ThemeData(
   appBarTheme: const AppBarTheme(
     titleSpacing: 20.0,
     systemOverlayStyle: SystemUiOverlayStyle(
-      statusBarColor: Colors.black,
+      statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
     ),
     backgroundColor: Color(0xFF020315),

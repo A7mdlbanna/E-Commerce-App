@@ -13,4 +13,12 @@ class FavSuccessfulState extends AppStates{}
 class FavErrorState extends AppStates{}
 
 class ChangeFavState extends AppStates{}
+class ChangeFavIndexState extends AppStates{}
+
+class CartLoadingState extends AppStates{}
+class CartSuccessfulState extends AppStates{}
+class CartErrorState extends AppStates{}
+
+class ChangeCartState extends AppStates{}
+class ChangeCartIndexState extends AppStates{}
 

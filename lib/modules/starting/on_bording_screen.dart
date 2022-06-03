@@ -105,7 +105,7 @@ class OnBoardingScreen extends StatelessWidget {
               //     physics: const NeverScrollableScrollPhysics(),
               //     itemBuilder: (BuildContext context, int index) {
               //      return GifView.asset(
-              //           "assets/onBoarding${isDark ? 'Dark' : ''}${pageIndex + 1}-${index + 1}.gif",
+              //           "assets/on_boarding/onBoarding${isDark ? 'Dark' : ''}${pageIndex + 1}-${index + 1}.gif",
               //           loop: false,
               //           onFrame: (value) =>
               //           duration = ((value / 15) * pow(10, 3)).round(),
