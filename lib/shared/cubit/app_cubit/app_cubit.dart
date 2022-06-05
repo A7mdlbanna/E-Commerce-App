@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/models/home_model.dart';
 import 'package:shop_app/shared/Network/end_points.dart';
 import 'package:shop_app/shared/constants.dart';
+import 'package:shop_app/shared/cubit/starting_cubit/starting_cubit.dart';
+import 'package:shop_app/shared/cubit/starting_cubit/starting_cubit.dart';
+import 'package:shop_app/shared/cubit/starting_cubit/starting_cubit.dart';
 import '../../Network/remote/dio_helper.dart';
 import 'app_states.dart';
 
@@ -11,6 +14,13 @@ class AppCubit extends Cubit<AppStates> {
 
   static AppCubit get(context) => BlocProvider.of(context);
 
+
+
+  ///////////////App Bar//////////////////////////
+  bool isPressedCartIcon = false;
+  void changeCartIcon(){
+    isPressedCartIcon = !isPressedCartIcon;
+  }
   ///////////////bottom nav bar///////////////////////
 
   List<String> titles = [
@@ -23,38 +33,24 @@ class AppCubit extends Cubit<AppStates> {
   int currentIndex = 0;
   String currentTitle = 'New Arrival';
   void changeIndex(value, PageController controller){
-    currentIndex = value;
-    controller.animateToPage(currentIndex, duration: const Duration(microseconds: 800), curve: Curves.ease);
+    controller.animateToPage(value, duration: const Duration(microseconds: 500), curve: Curves.ease);
     currentTitle = titles[value];
+    currentIndex = value;
+    emit(HomeChangeIndexState());
     emit(HomeChangeIndexState());
   }
-  List<List<BottomNavigationBarItem>> navItems = const[
-    [
-      BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/shop_filled.png'), size: 20, color: Color.fromARGB(255, 8, 60, 82)), label: 'home'),
-      BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/save_out.png'), size: 20, color: Color.fromARGB(255, 103, 108, 128)), label: 'saved'),
-      BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/shopping-cart.png'), size: 20, color: Color.fromARGB(255, 103, 108, 128)), label: 'cart'),
-      BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/shopping-bag.png'), size: 20, color: Color.fromARGB(255, 103, 108, 128)), label: 'account'),
-    ],
-    [
-      BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/shop.png'), size: 20, color: Color.fromARGB(255, 103, 108, 128)), label: 'home'),
-      BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/save_filled.png'), size: 20, color: Color.fromARGB(255, 8, 60, 82)), label: 'saved'),
-      BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/shopping-cart.png'), size: 20, color: Color.fromARGB(255, 103, 108, 128)), label: 'cart'),
-      BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/shopping-bag.png'), size: 20, color: Color.fromARGB(255, 103, 108, 128)), label: 'account'),
-    ],
-    [
-      BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/shop.png'), size: 20, color: Color.fromARGB(255, 103, 108, 128)), label: 'home'),
-      BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/save_out.png'), size: 20, color: Color.fromARGB(255, 103, 108, 128)), label: 'saved'),
-      BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/shopping-cart (1).png'), size: 20, color: Color.fromARGB(255, 8, 60, 82)), label: 'cart'),
-      BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/shopping-bag.png'), size: 20, color: Color.fromARGB(255, 103, 108, 128)), label: 'account'),
-    ],
-    [
-      BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/shop.png'), size: 20, color: Color.fromARGB(255, 103, 108, 128)), label: 'home'),
-      BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/save_out.png'), size: 20, color: Color.fromARGB(255, 103, 108, 128)), label: 'saved'),
-      BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/shopping-cart.png'), size: 20, color: Color.fromARGB(255, 103, 108, 128)), label: 'cart'),
-      BottomNavigationBarItem(icon: ImageIcon(AssetImage('assets/icons/shopping-bag (1).png'), size: 20, color: Color.fromARGB(255, 8, 60, 82)), label: 'account'),
-    ],
-];
 
+
+  late String userImage = '';
+
+  void getImage(context) {
+    userImage = StartingCubit
+        .get(context)
+        .loginData!
+        .data!
+        .image;
+    emit(GetImage());
+  }
   late int favID;
   void changeFavID(id){
     favID = id;

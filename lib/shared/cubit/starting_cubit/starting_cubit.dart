@@ -7,6 +7,7 @@ import 'package:shop_app/shared/Network/end_points.dart';
 import 'package:shop_app/shared/Network/local/cached_helper.dart';
 import 'package:shop_app/shared/cubit/starting_cubit/starting_states.dart';
 import '../../Network/remote/dio_helper.dart';
+import '../../constants.dart';
 
 class StartingCubit extends Cubit<StartingStates>{
   StartingCubit() : super(StartingInitialState());
@@ -61,9 +62,47 @@ Future<void> userLogin({required email, required password})async {
         loginData = UserLoginData.fromJSON(value?.data);
         CacheHelper.saveData('name', loginData!.data!.name);
         CacheHelper.saveData('token', loginData!.data!.token);
-        emit(LoginSuccessfulState(loginData!));
+        token = loginData!.data!.token;
+        emit(LoginSuccessfulState());
   }).catchError((error){
     print(error.toString());
     emit(LoginErrorState());
   });}
+
+UserSignUpData? signUpData;
+Future<void> userSignUp({required name, required email, required password, required phone})async {
+  emit(SignUpLoadingState());
+  await DioHelper.postData(
+      url: SIGNUP,
+      data: {
+        'name' : name,
+        'email' : email,
+        'password' : password,
+        'phone' : phone,
+      }).then((value) {
+        if (kDebugMode) {
+          print(value);
+        }
+        signUpData = UserSignUpData.fromJSON(value?.data);
+        // CacheHelper.saveData('token', loginData!.data!.token);
+        emit(SignUpSuccessfulState());
+  }).catchError((error){
+    print(error.toString());
+    emit(SignUpErrorState());
+  });}
+
+UserLogOut? logOut;
+Future<void> userLogOut()async {
+    emit(LogoutLoadingState());
+    await DioHelper.postData(url: LOGOUT, token: token).then((value) {
+      print(value);
+      logOut = UserLogOut.fromJSON(value?.data);
+      emit(LogoutSuccessfulState());
+    }).catchError((error){
+      print(error.toString());
+      emit(LogoutErrorState());
+    });}
+
+
+
 }

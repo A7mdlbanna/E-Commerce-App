@@ -22,3 +22,6 @@ class CartErrorState extends AppStates{}
 class ChangeCartState extends AppStates{}
 class ChangeCartIndexState extends AppStates{}
 
+
+class GetImage extends AppStates{}
+

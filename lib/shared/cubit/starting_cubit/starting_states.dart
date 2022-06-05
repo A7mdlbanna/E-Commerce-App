@@ -13,8 +13,15 @@ class TimerCancel extends StartingStates{}
 ///////////////Login//////////////////
 class LoginLoadingState extends StartingStates{}
 class ChangeForgetPasswordState extends StartingStates{}
-class LoginSuccessfulState extends StartingStates{
-  late UserLoginData loginData;
-  LoginSuccessfulState(this.loginData);
-}
+class LoginSuccessfulState extends StartingStates{}
 class LoginErrorState extends StartingStates{}
+
+///////////////signup//////////////////
+class SignUpLoadingState extends StartingStates{}
+class SignUpSuccessfulState extends StartingStates{}
+class SignUpErrorState extends StartingStates{}
+
+////////////////logOut///////////////////
+class LogoutLoadingState extends StartingStates{}
+class LogoutSuccessfulState extends StartingStates{}
+class LogoutErrorState extends StartingStates{}

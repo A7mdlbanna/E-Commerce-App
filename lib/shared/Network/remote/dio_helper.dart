@@ -29,7 +29,7 @@ class DioHelper {
   }
   static Future<Response?> postData({
     required String url,
-    required data,
+    data,
     lang = 'en',
     token
   })async {

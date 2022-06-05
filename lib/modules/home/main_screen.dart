@@ -12,6 +12,7 @@ Widget MainScreen(context, controller) {
   HomeData? homeData = cubit.homeData!.data;
   CarouselController carouselController = CarouselController();
 
+
   return SingleChildScrollView(
     controller: controller,
     child: Padding(
@@ -101,7 +102,7 @@ Widget MainScreen(context, controller) {
                               width: 150,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
-                                  color: Color(0xFFF8F8EE),
+                                  color: const Color(0xFFF8F8EE),
                                   border:
                                       Border.all(color: Colors.grey.shade400)),
                               child: InkWell(

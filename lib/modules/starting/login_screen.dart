@@ -4,24 +4,38 @@ import 'package:flutter_login/flutter_login.dart';
 import 'package:shop_app/shared/Network/local/cached_helper.dart';
 import 'package:shop_app/shared/cubit/theme_cubit/app_theme_cubit.dart';
 
+import '../../shared/constants.dart';
+import '../../shared/cubit/app_cubit/app_cubit.dart';
+import '../../shared/cubit/app_cubit/app_states.dart';
 import '../../shared/cubit/starting_cubit/starting_cubit.dart';
 import '../../shared/cubit/starting_cubit/starting_states.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  LoginScreen({Key? key}) : super(key: key);
 
-  Future<String?> userLogin(LoginData data, context)async{
+  String savedEmail = '';
+  String savedPassword = '';
+  late BuildContext ctx;
+  Future<String?> userLogin(LoginData data, context, ctx)async{
     // debugPrint('email: ${data.name}, Password: ${data.password}');
     return await StartingCubit.get(context).userLogin(email: data.name, password: data.password).then((value) {
-      debugPrint('UserLoginData: ${StartingCubit.get(context).loginData?.message}');
-      StartingCubit.get(context).loginData!.status ? CacheHelper.saveData('doneLogin', false) : null;
+        StartingCubit.get(context).loginData!.status ? {
+          AppCubit.get(context).getHomeData(),
+          AppCubit.get(context).getFavItems(context: ctx),
+          AppCubit.get(context).getCartItems(context: ctx, showCartSnack: false),
+          AppCubit.get(context).getImage(ctx),
+          savedEmail = data.name,
+          savedPassword = data.password,
+        } : null;
       return StartingCubit.get(context).loginData!.status ? null : StartingCubit.get(context).loginData?.message;
     });
   }
 
-  Future<String>? userRegister(SignupData data, context) {
-    debugPrint('Signup Email: ${data.name}, Password: ${data.password}, phoneNumber: ${''}, phoneNumber: ${''}, phoneNumber: ${''}');
-      return null;
+  Future<String?> userRegister(SignupData data, context) async{
+      debugPrint('Signup Email: ${data.name}, Password: ${data.password}, name: ${data.additionalSignupData!['Full Name']}, phoneNumber: ${data.additionalSignupData!['Phone Number']}');
+    return await StartingCubit.get(context).userSignUp(name: data.additionalSignupData!['Full Name'], email: data.name, password: data.password, phone: data.additionalSignupData!['Phone Number']).then((value) {
+      return StartingCubit.get(context).signUpData!.status ? null : StartingCubit.get(context).signUpData?.message;
+      });
   }
   // Future<String> _recoverPassword(String name, context) {
   //   debugPrint('Name: $name');
@@ -31,83 +45,99 @@ class LoginScreen extends StatelessWidget {
   // }
 
   @override
-  Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => StartingCubit()),
-        BlocProvider(create: (_) => ThemeCubit()),
-      ],
-      child: BlocConsumer<StartingCubit, StartingStates>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          StartingCubit cubit = StartingCubit.get(context);
-          return FlutterLogin(
-            title: 'Login',
-            onLogin: (data) {
-              cubit.changeForgetPassword(false);
-              return userLogin(data, context);
-            },
-            onSignup: (data) {
-              cubit.changeForgetPassword(true);
-              return userRegister(data, context);
-            },
-            hideForgotPasswordButton: cubit.forgetPassword,
-            onRecoverPassword: (data)=> null,
-                // _recoverPassword(data, context),
-            onSubmitAnimationCompleted: ()  => Navigator.pushNamedAndRemoveUntil(context, '/HomeScreen', (route) => false),
-            additionalSignupFields: [UserFormField(keyName: 'Full Name')],
-
-            theme: LoginTheme(
-              titleStyle: TextStyle(fontWeight: FontWeight.w500, shadows: [Shadow(color: Colors.black, blurRadius: 1.0, offset: Offset.zero)]),
-                primaryColor: const Color.fromARGB(255, 20, 127, 180),
-                cardTheme: const CardTheme(
-                    elevation: 20,
-                    color: Color.fromARGB(255, 255, 255, 255)
-                )
+  Widget build(BuildContext ctx) {
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return FlutterLogin(
+          title: 'Login',
+          onLogin: (data) {
+            // cubit.changeForgetPassword(false);
+            return userLogin(data, context, ctx);
+          },
+          onSignup: (data) {
+            // cubit.changeForgetPassword(true);
+            return userRegister(data, context);
+          },
+          savedEmail: savedEmail,
+          savedPassword: savedPassword,
+          loginAfterSignUp: false,
+          // hideForgotPasswordButton: cubit.forgetPassword,
+          onRecoverPassword: (data) => null, // _recoverPassword(data, context),
+          onSubmitAnimationCompleted: () {
+            print(CacheHelper.getData(key : 'doneLogin'));
+            print(home);
+            print(fav);
+            print(cart);
+            return home && fav && cart
+              ? Navigator.pushNamedAndRemoveUntil(context, '/HomeScreen', (route) => false)
+              : Container(
+              width: double.infinity,
+            height: double.infinity,
+            child: const Center(
+              child: CircularProgressIndicator(
+                color: Color.fromARGB(255, 8, 60, 82),
+              ),
             ),
-            // loginProviders: <LoginProvider>[
-            //   LoginProvider(
-            //     icon: Icon(FaIcon(FontAwesomeIcons.google),
-            //     label: 'Google'),
-            //     callback: () async {
-            //       debugPrint('start google sign in');
-            //       await Future.delayed(loginTime);
-            //       debugPrint('stop google sign in');
-            //       return null;
-            //     },
-            //   ),
-            //   LoginProvider(
-            //     icon: Icon(FaIcon(FontAwesomeIcons.facebookF)),
-            //     label: 'Facebook',
-            //     callback: () async {
-            //       debugPrint('start facebook sign in');
-            //       await Future.delayed(loginTime);
-            //       debugPrint('stop facebook sign in');
-            //       return null;
-            //     },
-            //   ),
-            //   LoginProvider(
-            //     icon: Icon(FaIcon(FontAwesomeIcons.linkedinIn)),
-            //     callback: () async {
-            //       debugPrint('start linkdin sign in');
-            //       await Future.delayed(loginTime);
-            //       debugPrint('stop linkdin sign in');
-            //       return null;
-            //     },
-            //   ),
-            //   LoginProvider(
-            //     icon: Icon(FaIcon(FontAwesomeIcon.githubAlt)),
-            //     callback: () async {
-            //       debugPrint('start github sign in');
-            //       await Future.delayed(loginTime);
-            //       debugPrint('stop github sign in');
-            //       return null;
-            //     },
-            //   ),
-            // ],
           );
-        }
-      ),
+          },
+          additionalSignupFields: const [UserFormField(keyName: 'Full Name'), UserFormField(keyName: 'Phone Number', icon: Icon(Icons.phone_android), userType: LoginUserType.phone), ],
+
+          theme: LoginTheme(
+              titleStyle: const TextStyle(fontWeight: FontWeight.w500,
+                  shadows: [
+                    Shadow(color: Colors.black,
+                        blurRadius: 1.0,
+                        offset: Offset.zero)
+                  ]),
+              primaryColor: const Color.fromARGB(255, 20, 127, 180),
+              cardTheme: const CardTheme(
+                  elevation: 20,
+                  color: Color.fromARGB(255, 204, 204, 204)
+              )
+          ),
+          // loginProviders: <LoginProvider>[
+          //   LoginProvider(
+          //     icon: Icon(FaIcon(FontAwesomeIcons.google),
+          //     label: 'Google'),
+          //     callback: () async {
+          //       debugPrint('start google sign in');
+          //       await Future.delayed(loginTime);
+          //       debugPrint('stop google sign in');
+          //       return null;
+          //     },
+          //   ),
+          //   LoginProvider(
+          //     icon: Icon(FaIcon(FontAwesomeIcons.facebookF)),
+          //     label: 'Facebook',
+          //     callback: () async {
+          //       debugPrint('start facebook sign in');
+          //       await Future.delayed(loginTime);
+          //       debugPrint('stop facebook sign in');
+          //       return null;
+          //     },
+          //   ),
+          //   LoginProvider(
+          //     icon: Icon(FaIcon(FontAwesomeIcons.linkedinIn)),
+          //     callback: () async {
+          //       debugPrint('start linkdin sign in');
+          //       await Future.delayed(loginTime);
+          //       debugPrint('stop linkdin sign in');
+          //       return null;
+          //     },
+          //   ),
+          //   LoginProvider(
+          //     icon: Icon(FaIcon(FontAwesomeIcon.githubAlt)),
+          //     callback: () async {
+          //       debugPrint('start github sign in');
+          //       await Future.delayed(loginTime);
+          //       debugPrint('stop github sign in');
+          //       return null;
+          //     },
+          //   ),
+          // ],
+        );
+      }
     );
   }
 }
