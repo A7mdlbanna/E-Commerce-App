@@ -9,7 +9,7 @@ class UserLoginData{
   UserLoginData.fromJSON(Map<String, dynamic> json){
     status = json['status'];
     message = json['message'];
-    data =UserData.fromJSON(json['data']);
+    if(status)data = UserData.fromJSON(json['data']);
   }
 }
 class UserData{

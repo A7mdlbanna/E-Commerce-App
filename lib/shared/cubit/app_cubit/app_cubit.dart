@@ -1,10 +1,14 @@
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:cross_file/src/types/interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:multipart_request/multipart_request.dart';
+import 'package:network_to_file_image/network_to_file_image.dart';
 import 'package:shop_app/models/home_model.dart';
 import 'package:shop_app/shared/Network/end_points.dart';
+import 'package:shop_app/shared/Network/local/cached_helper.dart';
 import 'package:shop_app/shared/constants.dart';
-import 'package:shop_app/shared/cubit/starting_cubit/starting_cubit.dart';
-import 'package:shop_app/shared/cubit/starting_cubit/starting_cubit.dart';
 import 'package:shop_app/shared/cubit/starting_cubit/starting_cubit.dart';
 import '../../Network/remote/dio_helper.dart';
 import 'app_states.dart';
@@ -41,7 +45,7 @@ class AppCubit extends Cubit<AppStates> {
   }
 
 
-  late String userImage = '';
+  late String userImage = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
 
   void getImage(context) {
     userImage = StartingCubit
@@ -92,9 +96,9 @@ class AppCubit extends Cubit<AppStates> {
     final snackBar = SnackBar(
       content: Row(
         children: [
-          Icon(Icons.check, color: Colors.greenAccent,),
-          SizedBox(width: 10,),
-          Text(cartItemsBeta!.message == 'Added Successfully'? 'Item Added To Cart!' : 'Item Deleted from Cart!', style: TextStyle(fontSize: 18),),
+          const Icon(Icons.check, color: Colors.greenAccent,),
+          const SizedBox(width: 10,),
+          Text(cartItemsBeta!.message == 'Added Successfully'? 'Item Added To Cart!' : 'Item Deleted from Cart!', style: const TextStyle(fontSize: 18),),
         ],
       ),
       action: fromCartSaved ?  SnackBarAction(
@@ -133,13 +137,13 @@ class AppCubit extends Cubit<AppStates> {
   Future<void> getHomeData()async{
     emit(HomeLoadingState());
      DioHelper.getData(url: HOME,).then((value){
-      // print(value);
+      // debugPrint(value);
       homeData = HomeModel.fromJSON(value?.data);
       home = true;
       emit(HomeSuccessfulState());
       // debugPrint(homeData.toString());
     }).catchError((error){
-      print(error.toString());
+      debugPrint(error.toString());
       emit(HomeErrorState());
     });
   }
@@ -159,12 +163,12 @@ class AppCubit extends Cubit<AppStates> {
       for (var id in favItems!.data!.data) {
       favItemsIDs.add(id.product!.id);
       }
-      print(favItemsIDs);
+      debugPrint(favItemsIDs.toString());
       showFavSnack! ? showFavSnackBar(context, fromFavSaved) : null;
       fav = true;
       emit(FavSuccessfulState());
     }).catchError((error){
-      print(error.toString());
+      debugPrint(error.toString());
       emit(FavErrorState());
     });
   }
@@ -172,12 +176,12 @@ class AppCubit extends Cubit<AppStates> {
   Future<void> addDeleteFavItems({required id, required context, showFavSnack = true, fromFavSaved = false}) async{
     emit(FavLoadingState());
     DioHelper.postData(url: FAV, data: {'product_id' : id}, token: token).then((value){
-      print(value);
+      // debugPrint(value);
       favItemsBeta = FavItemsBeta.fromJSON(value?.data);
       getFavItems(context: context, showFavSnack: showFavSnack, fromFavSaved: fromFavSaved);
       emit(FavSuccessfulState());
     }).catchError((error){
-      print(error.toString());
+      debugPrint(error.toString());
       emit(FavErrorState());
     });
   }
@@ -185,24 +189,17 @@ class AppCubit extends Cubit<AppStates> {
 
   CartItems? cartItems;
   CartItemsBeta? cartItemsBeta;
-  // List<int> cartItemsIDs = [];
 
   Future<void> getCartItems({required context, bool? showCartSnack = false, bool fromCartSaved = false})async{
     emit(CartLoadingState());
     await DioHelper.getData(url: CART, token: token).then((value){
-      print(value);
+      // debugPrint(value);
       cartItems = CartItems.fromJSON(value?.data);
-
-      // cartItemsIDs.clear();
-      // for (var id in cartItems!.data!.cartItems) {
-      //   cartItemsIDs.add(id.product!.id);
-      // }
-      // print(cartItemsIDs);
       showCartSnack! ? showCartSnackBar(context, fromCartSaved) : null;
       cart = true;
       emit(CartSuccessfulState());
     }).catchError((error){
-      print(error.toString());
+      debugPrint(error.toString());
       emit(CartErrorState());
     });
   }
@@ -210,13 +207,45 @@ class AppCubit extends Cubit<AppStates> {
   Future<void> addDeleteCartItems({required id, required context, showCartSnack = true, fromCartSaved = false}) async{
     emit(CartLoadingState());
     DioHelper.postData(url: CART, data: {'product_id' : id}, token: token).then((value){
-      print(value);
+      // debugPrint(value.toString());
       cartItemsBeta = CartItemsBeta.fromJSON(value?.data);
       getCartItems(context: context, showCartSnack: showCartSnack, fromCartSaved: fromCartSaved);
       emit(CartSuccessfulState());
     }).catchError((error){
-      print(error.toString());
+      debugPrint(error.toString());
       emit(CartErrorState());
     });
+  }
+
+
+
+  dynamic galleryImage;
+  void changePic(pickImage) async{
+    // var request = MultipartRequest();
+    // request.setUrl();
+    // request.addFile("image", pickImage?.path);
+    // Response response = request.send();
+    // response.onError = () {
+    //   print("Error");
+    // };
+    // response.onComplete = (response) {
+    //   print(response);
+    // };
+    // response.progress.listen((int progress) {
+    //   print("progress from response object $progress");
+    // });
+    // var request = http.MultipartRequest('POST', Uri.parse(url));
+    // request.files.add(
+    //     await http.MultipartFile.fromPath(
+    //     'pdf',
+    //     filename
+    //   )
+    // );
+    // var res = await request.send();
+
+    galleryImage = FileImage(File(pickImage!.path));
+    CacheHelper.saveData('userImage', galleryImage);
+    userImage = galleryImage;
+    emit(ChangePic());
   }
 }

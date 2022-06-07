@@ -20,6 +20,7 @@ class LoginScreen extends StatelessWidget {
     // debugPrint('email: ${data.name}, Password: ${data.password}');
     return await StartingCubit.get(context).userLogin(email: data.name, password: data.password).then((value) {
         StartingCubit.get(context).loginData!.status ? {
+          CacheHelper.saveData('password', data.password),
           AppCubit.get(context).getHomeData(),
           AppCubit.get(context).getFavItems(context: ctx),
           AppCubit.get(context).getCartItems(context: ctx, showCartSnack: false),
@@ -65,21 +66,16 @@ class LoginScreen extends StatelessWidget {
           // hideForgotPasswordButton: cubit.forgetPassword,
           onRecoverPassword: (data) => null, // _recoverPassword(data, context),
           onSubmitAnimationCompleted: () {
-            print(CacheHelper.getData(key : 'doneLogin'));
-            print(home);
-            print(fav);
-            print(cart);
-            return home && fav && cart
+            debugPrint(home.toString());
+            debugPrint(fav.toString());
+            debugPrint(cart.toString());
+            return home && fav
               ? Navigator.pushNamedAndRemoveUntil(context, '/HomeScreen', (route) => false)
-              : Container(
-              width: double.infinity,
-            height: double.infinity,
-            child: const Center(
-              child: CircularProgressIndicator(
-                color: Color.fromARGB(255, 8, 60, 82),
-              ),
-            ),
-          );
+              : const Center(
+                child: CircularProgressIndicator(
+                  color: Color.fromARGB(255, 8, 60, 82),
+                ),
+              );
           },
           additionalSignupFields: const [UserFormField(keyName: 'Full Name'), UserFormField(keyName: 'Phone Number', icon: Icon(Icons.phone_android), userType: LoginUserType.phone), ],
 

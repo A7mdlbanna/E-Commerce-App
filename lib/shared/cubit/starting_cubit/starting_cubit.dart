@@ -48,26 +48,43 @@ void changePage(PageController controller, context){
   }
 
 UserLoginData? loginData;
-Future<void> userLogin({required email, required password})async {
+Future<String?> userLogin({required email, required password})async {
   emit(LoginLoadingState());
-  await DioHelper.postData(
+  return await DioHelper.postData(
       url: LOGIN,
       data: {
         'email' : email,
         'password' : password
       }).then((value) {
-        if (kDebugMode) {
-          print(value);
-        }
+        // debugPrint(value.toString());
         loginData = UserLoginData.fromJSON(value?.data);
         CacheHelper.saveData('name', loginData!.data!.name);
         CacheHelper.saveData('token', loginData!.data!.token);
         token = loginData!.data!.token;
         emit(LoginSuccessfulState());
   }).catchError((error){
-    print(error.toString());
+    debugPrint(error.toString());
     emit(LoginErrorState());
-  });}
+  });
+}
+Future<String?> updateProfile({name, email, phone,  password, image})async {
+    emit(LoginLoadingState());
+    return await DioHelper.postData(
+        url: LOGIN,
+        data: {
+          'name': name??loginData!.data!.name,
+          'email' : email??loginData!.data!.email,
+          'phone': phone??loginData!.data!.phone,
+          'password': password??CacheHelper.getData(key: 'password'),
+          'image': image??loginData!.data!.image,
+        }).then((value) {
+      loginData = UserLoginData.fromJSON(value?.data);
+      emit(LoginSuccessfulState());
+    }).catchError((error){
+      debugPrint(error.toString());
+      emit(LoginErrorState());
+    });
+  }
 
 UserSignUpData? signUpData;
 Future<void> userSignUp({required name, required email, required password, required phone})async {
@@ -81,13 +98,13 @@ Future<void> userSignUp({required name, required email, required password, requi
         'phone' : phone,
       }).then((value) {
         if (kDebugMode) {
-          print(value);
+          debugPrint(value.toString());
         }
         signUpData = UserSignUpData.fromJSON(value?.data);
         // CacheHelper.saveData('token', loginData!.data!.token);
         emit(SignUpSuccessfulState());
   }).catchError((error){
-    print(error.toString());
+    debugPrint(error.toString());
     emit(SignUpErrorState());
   });}
 
@@ -95,14 +112,11 @@ UserLogOut? logOut;
 Future<void> userLogOut()async {
     emit(LogoutLoadingState());
     await DioHelper.postData(url: LOGOUT, token: token).then((value) {
-      print(value);
+      debugPrint(value.toString());
       logOut = UserLogOut.fromJSON(value?.data);
       emit(LogoutSuccessfulState());
     }).catchError((error){
-      print(error.toString());
+      debugPrint(error.toString());
       emit(LogoutErrorState());
     });}
-
-
-
 }

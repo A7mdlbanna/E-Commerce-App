@@ -24,4 +24,5 @@ class ChangeCartIndexState extends AppStates{}
 
 
 class GetImage extends AppStates{}
+class ChangePic extends AppStates{}
 

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 ThemeData lightMode = ThemeData(
-  primaryColor: Color(0xFFF9F8F4),
+  primaryColor: const Color(0xFFF9F8F4),
 
-  scaffoldBackgroundColor:  Color(0xFFF9F8F4),
+  scaffoldBackgroundColor:  const Color(0xFFF9F8F4),
   appBarTheme: const AppBarTheme(
     titleSpacing: 20.0,
     systemOverlayStyle: SystemUiOverlayStyle(
@@ -44,7 +44,7 @@ ThemeData lightMode = ThemeData(
       fontSize: 14.0,
       color: Colors.grey.shade700,
     ),
-    headline3: TextStyle(
+    headline3: const TextStyle(
       fontSize: 16.0,
       color: Colors.black,
       fontWeight: FontWeight.bold,

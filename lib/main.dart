@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:network_to_file_image/network_to_file_image.dart';
 import 'package:shop_app/modules/starting/on_bording_screen.dart';
 import 'package:shop_app/shared/Network/local/cached_helper.dart';
 import 'package:shop_app/shared/Network/remote/dio_helper.dart';
@@ -29,6 +30,9 @@ void main() async {
 
   bool isDark = CacheHelper.getData(key: 'isDark')??SchedulerBinding.instance.window.platformBrightness == Brightness.dark;
   token = CacheHelper.getData(key: 'token')??'';
+  CacheHelper.getData(key: 'userImage') == null
+      ? NetworkToFileImage(url: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png", file: userImage,)
+      : userImage = CacheHelper.getData(key: 'userImage');
   BlocOverrides.runZoned(
     () {
       runApp(MyApp(isDark));

@@ -3,10 +3,10 @@ import 'package:flutter/services.dart';
 
 ThemeData darkMode =   ThemeData(
   primaryColor:
-  Color(0xFF000000),
+  const Color(0xFF000000),
   // Color(0xFF0E122F),
   scaffoldBackgroundColor:
-  Color(0xFF000000),
+  const Color(0xFF000000),
   // Color(0xFF0E122F),
   appBarTheme: const AppBarTheme(
     titleSpacing: 20.0,

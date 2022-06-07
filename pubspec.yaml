@@ -55,6 +55,9 @@ dependencies:
   hidable: ^1.0.2
   flutter_floating_bottom_bar: ^1.0.0+1
   app_settings: ^4.1.6
+  image_picker: ^0.8.5+3
+  network_to_file_image: ^4.0.1
+#  multipart_request: ^0.3.1
 
 dev_dependencies:
   flutter_test:
