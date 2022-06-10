@@ -43,4 +43,20 @@ class DioHelper {
       data: data,
     );
   }
+  static Future<Response?> uploadData({
+    required String url,
+    data,
+    lang = 'en',
+    token
+  })async {
+    dio?.options.headers = {
+      'lang' : lang,
+      'authorization' : token??'',
+      'Content-Type': 'application/json',
+    };
+    return dio?.put(
+      url,
+      data: data,
+    );
+  }
 }

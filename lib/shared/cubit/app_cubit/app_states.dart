@@ -19,10 +19,19 @@ class CartLoadingState extends AppStates{}
 class CartSuccessfulState extends AppStates{}
 class CartErrorState extends AppStates{}
 
+class CategoriesLoadingState extends AppStates{}
+class CategoriesSuccessfulState extends AppStates{}
+class CategoriesErrorState extends AppStates{}
+
 class ChangeCartState extends AppStates{}
 class ChangeCartIndexState extends AppStates{}
 
 
-class GetImage extends AppStates{}
-class ChangePic extends AppStates{}
+////////////////GetProfile///////////////////
+class GetProfileLoadingState extends AppStates{}
+class GetProfileSuccessfulState extends AppStates{}
+class GetProfileErrorState extends AppStates{}
 
+class GetImage extends AppStates{}
+
+class ChangePic extends AppStates{}

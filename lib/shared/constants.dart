@@ -10,5 +10,6 @@ bool doneGetData = false;
 bool home = false;
 bool fav = false;
 bool cart = false;
+bool categories = false;
 
 dynamic userImage;

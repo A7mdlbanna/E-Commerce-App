@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:shop_app/modules/home/account_screen.dart';
 import 'package:shop_app/modules/home/cart_screen.dart';
-import '../../shared/Network/local/cached_helper.dart';
 import '../../shared/constants.dart';
 import '../../shared/cubit/app_cubit/app_cubit.dart';
 import '../../shared/cubit/app_cubit/app_states.dart';
@@ -20,13 +19,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    PageController pageController = PageController(initialPage: 0);
+    PageController pageController = PageController(initialPage: 0, keepPage: false);
     return BlocConsumer<AppCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
         AppCubit cubit = AppCubit.get(context);
-          return home && fav && cart
-            ? Scaffold(
+          if (home && fav && cart) {
+            return Scaffold(
             backgroundColor: const Color(0xFFF8F8EE),
             appBar: AppBar(
               backgroundColor: const Color(0xFFF8F8EE),
@@ -94,8 +93,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-          )
-            : const Center(child: CircularProgressIndicator(),);
+          );
+          } else {
+            return const Center(child: CircularProgressIndicator(),);
+          }
       },
     );
   }

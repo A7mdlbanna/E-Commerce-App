@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter_login/flutter_login.dart';
 import 'package:http/http.dart' as http;
 import 'package:cross_file/src/types/interface.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:shop_app/shared/Network/end_points.dart';
 import 'package:shop_app/shared/Network/local/cached_helper.dart';
 import 'package:shop_app/shared/constants.dart';
 import 'package:shop_app/shared/cubit/starting_cubit/starting_cubit.dart';
+import '../../../models/user_login.dart';
 import '../../Network/remote/dio_helper.dart';
 import 'app_states.dart';
 
@@ -44,17 +46,6 @@ class AppCubit extends Cubit<AppStates> {
     emit(HomeChangeIndexState());
   }
 
-
-  late String userImage = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
-
-  void getImage(context) {
-    userImage = StartingCubit
-        .get(context)
-        .loginData!
-        .data!
-        .image;
-    emit(GetImage());
-  }
   late int favID;
   void changeFavID(id){
     favID = id;
@@ -128,10 +119,7 @@ class AppCubit extends Cubit<AppStates> {
     return name;
   }
 
-  void changeFav(index, context){
-    addDeleteFavItems(id : homeData!.data!.products[index].id ,context: context, fromFavSaved: false);
-    emit(ChangeFavState());
-  }
+///////////////////////////HOME//////////////////////////////////
 
   HomeModel? homeData;
   Future<void> getHomeData()async{
@@ -148,11 +136,16 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-
+///////////////////////////FAV//////////////////////////////////
 
   FavItems? favItems;
   FavItemsBeta? favItemsBeta;
   List<int> favItemsIDs = [];
+
+  void changeFav(index, context){
+    addDeleteFavItems(id : homeData!.data!.products[index].id ,context: context, fromFavSaved: false);
+    emit(ChangeFavState());
+  }
 
   Future<void> getFavItems({required context, bool? showFavSnack = false, bool fromFavSaved = false})async{
     emit(FavLoadingState());
@@ -186,6 +179,7 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
+///////////////////////////CART//////////////////////////////////
 
   CartItems? cartItems;
   CartItemsBeta? cartItemsBeta;
@@ -217,35 +211,50 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-
-
-  dynamic galleryImage;
-  void changePic(pickImage) async{
-    // var request = MultipartRequest();
-    // request.setUrl();
-    // request.addFile("image", pickImage?.path);
-    // Response response = request.send();
-    // response.onError = () {
-    //   print("Error");
-    // };
-    // response.onComplete = (response) {
-    //   print(response);
-    // };
-    // response.progress.listen((int progress) {
-    //   print("progress from response object $progress");
-    // });
-    // var request = http.MultipartRequest('POST', Uri.parse(url));
-    // request.files.add(
-    //     await http.MultipartFile.fromPath(
-    //     'pdf',
-    //     filename
-    //   )
-    // );
-    // var res = await request.send();
-
-    galleryImage = FileImage(File(pickImage!.path));
-    CacheHelper.saveData('userImage', galleryImage);
-    userImage = galleryImage;
+  ////////////////////////PROFILE/////////////////////////////////
+  void changeImage(imageProv){
+    userImage = imageProv;
     emit(ChangePic());
   }
+  Future<void> getProfile(context)async{
+    emit(GetProfileLoadingState());
+    DioHelper.getData(url: PROFILE, token: token).then((value) async{
+      print(value);
+      // if(value==null) {
+      //   showDialog(context: context, builder: (context){
+      //   return AlertDialog(
+      //     content: const Text('something went wrong'),
+      //     actions: [
+      //       TextButton(onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/loginScreen', (route) => false) , child: const Text('Login Again'))
+      //     ],
+      //   );
+      // });
+      // }
+      StartingCubit.get(context).loginData = UserLoginData.fromJSON(value!.data);
+      changeImage(NetworkImage(StartingCubit.get(context).loginData!.data!.image));
+      emit(GetProfileSuccessfulState());
+    }).catchError((error){
+      debugPrint(error.toString());
+      emit(GetProfileErrorState());
+    });
+  }
+
+  ////////////////////////CATEGORIES//////////////////////////////
+
+  CategoriesItems? categoriesItems;
+
+  Future<void> getCategoriesItems()async{
+    emit(CategoriesLoadingState());
+    await DioHelper.getData(url: CATEGORIES).then((value){
+      debugPrint(value.toString());
+      categoriesItems = CategoriesItems.fromJSON(value?.data);
+      categories = true;
+      emit(CategoriesSuccessfulState());
+    }).catchError((error){
+      debugPrint(error.toString());
+      emit(CategoriesErrorState());
+    });
+  }
+
+
 }

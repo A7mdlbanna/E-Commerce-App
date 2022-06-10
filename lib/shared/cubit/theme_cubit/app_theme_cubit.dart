@@ -16,8 +16,9 @@ class ThemeCubit extends Cubit<ThemeStates> {
   Color fillColor =  Colors.white;
   Color hintColor =  Colors.grey.shade500;
   void changeTheme({fromShared}){
-    if(fromShared != null)isDark = fromShared;
-    else {
+    if(fromShared != null) {
+      isDark = fromShared;
+    } else {
       isDark = !isDark;
       CacheHelper.saveData('isDark', isDark).then((value){
         emit(ChangeAppThemeState());

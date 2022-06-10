@@ -7,7 +7,7 @@ Widget FavScreen(context, controller) {
 
   AppCubit cubit = AppCubit.get(context);
   FavItems? favItems = cubit.favItems;
-  return favItems!.data!.data.length == 0
+  return favItems!.data!.data.isEmpty
     ? Center(child: Text('there are no saved items, go and save some', style: TextStyle(color: Colors.grey.shade400, fontSize: 16),),)
     : ListView.separated(
       controller: controller,
@@ -24,8 +24,8 @@ Widget FavScreen(context, controller) {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(favItems.data!.data[index].product!.name, maxLines: 2, overflow: TextOverflow.ellipsis,),
-                      SizedBox(height: 10,),
-                      Text('EGP ${favItems.data!.data[index].product!.price}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                      const SizedBox(height: 10,),
+                      Text('EGP ${favItems.data!.data[index].product!.price}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                     ],
                   ),
                 ),
@@ -50,7 +50,7 @@ Widget FavScreen(context, controller) {
                     ),
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: Material(
@@ -59,12 +59,8 @@ Widget FavScreen(context, controller) {
                     color: Colors.orange.shade600,
                     clipBehavior: Clip.antiAlias,
                     child: MaterialButton(
-                      onPressed: (){},
-                      child: Row(
-                        children: [
-                          Text('ADD TO CART', style: TextStyle(color: Colors.white),),
-                        ],
-                      ),
+                      onPressed: () => cubit.addDeleteCartItems(id : cubit.favItems!.data!.data[index].product!.id ,context: context, fromCartSaved: false),
+                      child: const Text('ADD TO CART', style: TextStyle(color: Colors.white),),
                     ),
                   ),
                 )
@@ -73,7 +69,7 @@ Widget FavScreen(context, controller) {
           ],
         ),
       ),
-      separatorBuilder: (context, index) => Divider(thickness: 1.4, height: 10,),
+      separatorBuilder: (context, index) => const Divider(thickness: 1.4, height: 10,),
       itemCount: favItems.data!.data.length,
     );
 }

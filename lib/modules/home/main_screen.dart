@@ -62,24 +62,31 @@ Widget MainScreen(context, controller) {
             height: 10,
           ),
           SizedBox(
-            height: 30,
+            height: 88,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) => Container(
+                width: 85,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(150),
+                  borderRadius: BorderRadius.circular(20),
                   color: Colors.grey.shade200,
                 ),
-                child: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('Hello'),
+                child:  Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(child: Container(child: Image.network(cubit.categoriesItems!.data!.data[index].image, width: 40, height: 40,))),
+                      Text(cubit.categoriesItems!.data!.data[index].name, textAlign: TextAlign.center,),
+                    ],
+                  ),
                 ),
               ),
               separatorBuilder: (BuildContext context, int index) =>
                   const SizedBox(
                 width: 10,
               ),
-              itemCount: 10,
+              itemCount: cubit.categoriesItems!.data!.data.length,
             ),
           ),
           const SizedBox(
@@ -95,17 +102,19 @@ Widget MainScreen(context, controller) {
                     physics: const NeverScrollableScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, idx) => Stack(
-                          alignment: Alignment.topRight,
-                          children: [
-                            Container(
-                              height: 200,
-                              width: 150,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: const Color(0xFFF8F8EE),
-                                  border:
-                                      Border.all(color: Colors.grey.shade400)),
-                              child: InkWell(
+                      alignment: Alignment.topRight,
+                      children: [
+                        Container(
+                          height: 200,
+                          width: 150,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: const Color(0xFFF8F8EE),
+                              border:
+                              Border.all(color: Colors.grey.shade400)),
+                          child: Stack(
+                            children: [
+                              InkWell(
                                 onTap: () {},
                                 child: Column(
                                   children: [
@@ -130,72 +139,64 @@ Widget MainScreen(context, controller) {
                                             width: 74,
                                             child: Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  homeData
-                                                      .products[
-                                                          (index * 2) + idx]
-                                                      .name,
+                                                  homeData.products[(index * 2) + idx].name,
                                                   maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
+                                                  overflow: TextOverflow.ellipsis,
                                                 ),
-                                                homeData
-                                                            .products[
-                                                                (index * 2) +
-                                                                    idx]
-                                                            .discount >
-                                                        0
-                                                    ? Column(children: [
-                                                        Text(
-                                                            'EGP${homeData.products[(index * 2) + idx].oldPrice.round()}',
+                                                homeData.products[(index * 2) + idx].discount > 0
+                                                    ? Column(
+                                                    children: [
+                                                  Text(
+                                                      'EGP${homeData.products[(index * 2) + idx].oldPrice.round()}',
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          decoration:
+                                                          TextDecoration
+                                                              .lineThrough,
+                                                          color: Colors
+                                                              .grey
+                                                              .shade500)),
+                                                  RichText(
+                                                      textAlign:
+                                                      TextAlign.start,
+                                                      text: TextSpan(
+                                                        children: [
+                                                          TextSpan(
+                                                              text:
+                                                              '${homeData.products[(index * 2) + idx].price.round()}',
+                                                              style: const TextStyle(
+                                                                  fontSize:
+                                                                  17,
+                                                                  fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                                  color: Colors
+                                                                      .black)),
+                                                          const TextSpan(
+                                                            text: 'EGP',
                                                             style: TextStyle(
-                                                                fontSize: 12,
-                                                                decoration:
-                                                                    TextDecoration
-                                                                        .lineThrough,
+                                                                fontSize:
+                                                                10,
                                                                 color: Colors
-                                                                    .grey
-                                                                    .shade500)),
-                                                        RichText(
-                                                            textAlign:
-                                                                TextAlign.start,
-                                                            text: TextSpan(
-                                                              children: [
-                                                                TextSpan(
-                                                                    text:
-                                                                        '${homeData.products[(index * 2) + idx].price.round()}',
-                                                                    style: const TextStyle(
-                                                                        fontSize:
-                                                                            17,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .bold,
-                                                                        color: Colors
-                                                                            .black)),
-                                                                const TextSpan(
-                                                                  text: 'EGP',
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          10,
-                                                                      color: Colors
-                                                                          .black),
-                                                                ),
-                                                              ],
-                                                            ))
-                                                      ])
+                                                                    .black),
+                                                          ),
+                                                        ],
+                                                      ))
+                                                ])
                                                     : Text(
-                                                        'EGP${homeData.products[(index * 2) + idx].price.round()}',
-                                                        style: const TextStyle(
-                                                            fontSize: 15,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                      ),
+                                                  'EGP${homeData.products[(index * 2) + idx].price.round()}',
+                                                  style: const TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                      FontWeight
+                                                          .bold),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow
+                                                      .ellipsis,
+                                                ),
                                                 // const SizedBox(height: 10,)
                                               ],
                                             ),
@@ -206,56 +207,73 @@ Widget MainScreen(context, controller) {
                                   ],
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: InkWell(
-                                onTap: () {
-                                  cubit.changeFav((index * 2) + idx, context);
-                                },
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    const CircleAvatar(
-                                      backgroundColor: Colors.black26,
-                                      radius: 18,
-                                    ),
-                                    cubit.favItemsIDs.contains(cubit.homeData!.data!.products[(index * 2) + idx].id)
-                                        ? const Icon(
-                                            Icons.favorite,
-                                            color: Colors.red,
-                                          )
-                                        : const Icon(
-                                            Icons.favorite_border_outlined,
-                                            color: Colors.white70,
-                                          ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomRight,
-                              child: InkWell(
-                                onTap: () => cubit.addDeleteCartItems(id : cubit.homeData!.data!.products[(index * 2) + idx].id ,context: context, fromCartSaved: false),
-                                child: Container(
-                                  height: 40,
-                                  width: 45,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.orangeAccent,
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(20.0),
-                                        bottomRight: Radius.circular(20.0)),
+                              Stack(
+                                // alignment: Alignment.center,
+                                children: [
+                                  const ImageIcon(
+                                    AssetImage('assets/icons/discount.png'),
+                                    color: Colors.red,
+                                    size: 28,
                                   ),
-                                  child: const Icon(Icons.add),
+                                  Column(
+                                    children: [
+                                      Text('${cubit.homeData!.data!.products[(index * 2) + idx].discount}', style: TextStyle(color: Colors.white, fontSize: 10),),
+                                      const Text('OFF', style: TextStyle(fontSize: 10, color: Colors.white),),
+                                    ],
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: InkWell(
+                            onTap: () {
+                              cubit.changeFav((index * 2) + idx, context);
+                            },
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                const CircleAvatar(
+                                  backgroundColor: Colors.black26,
+                                  radius: 18,
                                 ),
+                                cubit.favItemsIDs.contains(cubit.homeData!.data!.products[(index * 2) + idx].id)
+                                    ? const Icon(
+                                  Icons.favorite,
+                                  color: Colors.red,
+                                )
+                                    : const Icon(
+                                  Icons.favorite_border_outlined,
+                                  color: Colors.white70,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: InkWell(
+                            onTap: () => cubit.addDeleteCartItems(id : cubit.homeData!.data!.products[(index * 2) + idx].id ,context: context, fromCartSaved: false),
+                            child: Container(
+                              height: 40,
+                              width: 45,
+                              decoration: const BoxDecoration(
+                                color: Colors.orangeAccent,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20.0),
+                                    bottomRight: Radius.circular(20.0)),
                               ),
-                            )
-                          ],
+                              child: const Icon(Icons.add),
+                            ),
+                          ),
                         ),
-                    separatorBuilder: (context, index) => const SizedBox(
-                          width: 20,
-                        ),
-                    itemCount: 2),
+                      ],
+                    ),
+                    separatorBuilder: (context, index) => const SizedBox(width: 20),
+                    itemCount: 2
+                ),
               ),
               separatorBuilder: (BuildContext context, int index) =>
                   const SizedBox(

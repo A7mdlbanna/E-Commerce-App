@@ -3,7 +3,7 @@ import 'package:flutter_login/flutter_login.dart';
 
 class UserLoginData{
   late bool status;
-  late String message;
+  String? message;
   UserData? data;
 
   UserLoginData.fromJSON(Map<String, dynamic> json){

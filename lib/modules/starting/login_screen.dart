@@ -20,11 +20,12 @@ class LoginScreen extends StatelessWidget {
     // debugPrint('email: ${data.name}, Password: ${data.password}');
     return await StartingCubit.get(context).userLogin(email: data.name, password: data.password).then((value) {
         StartingCubit.get(context).loginData!.status ? {
+          CacheHelper.saveData('doneLogin', true),
           CacheHelper.saveData('password', data.password),
           AppCubit.get(context).getHomeData(),
           AppCubit.get(context).getFavItems(context: ctx),
           AppCubit.get(context).getCartItems(context: ctx, showCartSnack: false),
-          AppCubit.get(context).getImage(ctx),
+          AppCubit.get(context).getCategoriesItems(),
           savedEmail = data.name,
           savedPassword = data.password,
         } : null;
@@ -77,7 +78,10 @@ class LoginScreen extends StatelessWidget {
                 ),
               );
           },
-          additionalSignupFields: const [UserFormField(keyName: 'Full Name'), UserFormField(keyName: 'Phone Number', icon: Icon(Icons.phone_android), userType: LoginUserType.phone), ],
+          additionalSignupFields: const [
+            UserFormField(keyName: 'Full Name'),
+            UserFormField(keyName: 'Phone Number', icon: Icon(Icons.phone_android), userType: LoginUserType.phone),
+          ],
 
           theme: LoginTheme(
               titleStyle: const TextStyle(fontWeight: FontWeight.w500,
@@ -92,46 +96,45 @@ class LoginScreen extends StatelessWidget {
                   color: Color.fromARGB(255, 204, 204, 204)
               )
           ),
-          // loginProviders: <LoginProvider>[
-          //   LoginProvider(
-          //     icon: Icon(FaIcon(FontAwesomeIcons.google),
-          //     label: 'Google'),
-          //     callback: () async {
-          //       debugPrint('start google sign in');
-          //       await Future.delayed(loginTime);
-          //       debugPrint('stop google sign in');
-          //       return null;
-          //     },
-          //   ),
-          //   LoginProvider(
-          //     icon: Icon(FaIcon(FontAwesomeIcons.facebookF)),
-          //     label: 'Facebook',
-          //     callback: () async {
-          //       debugPrint('start facebook sign in');
-          //       await Future.delayed(loginTime);
-          //       debugPrint('stop facebook sign in');
-          //       return null;
-          //     },
-          //   ),
-          //   LoginProvider(
-          //     icon: Icon(FaIcon(FontAwesomeIcons.linkedinIn)),
-          //     callback: () async {
-          //       debugPrint('start linkdin sign in');
-          //       await Future.delayed(loginTime);
-          //       debugPrint('stop linkdin sign in');
-          //       return null;
-          //     },
-          //   ),
-          //   LoginProvider(
-          //     icon: Icon(FaIcon(FontAwesomeIcon.githubAlt)),
-          //     callback: () async {
-          //       debugPrint('start github sign in');
-          //       await Future.delayed(loginTime);
-          //       debugPrint('stop github sign in');
-          //       return null;
-          //     },
-          //   ),
-          // ],
+          loginProviders: <LoginProvider>[
+            LoginProvider(
+              icon: Icons.add,
+              callback: () async {
+                debugPrint('start google sign in');
+                await Future.delayed(const Duration(milliseconds: 1000));
+                debugPrint('stop google sign in');
+                return null;
+              },
+            ),
+            // LoginProvider(
+            //   icon: Icon(FaIcon(FontAwesomeIcons.facebookF)),
+            //   label: 'Facebook',
+            //   callback: () async {
+            //     debugPrint('start facebook sign in');
+            //     await Future.delayed(loginTime);
+            //     debugPrint('stop facebook sign in');
+            //     return null;
+            //   },
+            // ),
+            // LoginProvider(
+            //   icon: Icon(FaIcon(FontAwesomeIcons.linkedinIn)),
+            //   callback: () async {
+            //     debugPrint('start linkdin sign in');
+            //     await Future.delayed(loginTime);
+            //     debugPrint('stop linkdin sign in');
+            //     return null;
+            //   },
+            // ),
+            // LoginProvider(
+            //   icon: Icon(FaIcon(FontAwesomeIcon.githubAlt)),
+            //   callback: () async {
+            //     debugPrint('start github sign in');
+            //     await Future.delayed(loginTime);
+            //     debugPrint('stop github sign in');
+            //     return null;
+            //   },
+            // ),
+          ],
         );
       }
     );

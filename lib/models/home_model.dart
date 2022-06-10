@@ -269,3 +269,60 @@ class CartProducts{
     description = json['description'];
   }
 }
+
+////////////////////Categories Model//////////////////////////
+// here is a model for categories:
+class CategoriesItems {
+  late bool status;
+  String? message;
+  CategoriesData? data;
+
+  CategoriesItems.fromJSON(Map<String, dynamic> json){
+    status = json['status'];
+    message = json['message'];
+    status ? data = CategoriesData.fromJSON(json['data']) : null;
+  }
+}
+class CategoriesData {
+  late int currentPage;
+  List<CategoryItemsData> data = [];
+
+///////////we don't need these now:)//////////
+  int? from;
+  int? to;
+  late int perPage;
+  late int lastPage;
+  late int total;
+  late String path;
+  String? firstPageUrl;
+  String? lastPageUrl;
+  String? nextPageUrl;
+  String? prevPageUrl;
+//////////////////////Constructor///////////////////////////
+  CategoriesData.fromJSON(Map<String, dynamic> json){
+    currentPage = json['current_page'];
+    json['data'].forEach((e){
+      data.add(CategoryItemsData.fromJSON(e));
+    });
+    from = json['from'];
+    to = json['to'];
+    perPage = json['per_page'];
+    lastPage = json['last_page'];
+    total = json['total'];
+    path = json['path'];
+    lastPageUrl = json['last_page_url'];
+    nextPageUrl = json['last_page_url'];
+    prevPageUrl = json['next_page_url'];
+    firstPageUrl = json['first_page_url'];
+  }
+}
+class CategoryItemsData {
+  late int mainId;
+  late String name;
+  late String image;
+  CategoryItemsData.fromJSON(Map<String, dynamic> json){
+    mainId = json['id'];
+    name = json['name'];
+    image = json['image'];
+  }
+}
