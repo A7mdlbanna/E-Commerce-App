@@ -35,18 +35,13 @@ Widget MainScreen(context, controller) {
           homeData?.products != null
               ? CarouselSlider.builder(
                   itemBuilder: (BuildContext context, int idx, int index) {
-                    return Container(
-                        decoration: const BoxDecoration(
-                            // color: Color(0xFF120C30),
-                            ),
-                        child: Image.network(homeData!.products[idx].image));
+                    return Image.network(homeData!.banners[idx].image);
                   },
-                  itemCount: homeData!.products.length,
+                  itemCount: homeData!.banners.length,
                   options: CarouselOptions(
-                      height: 300,
+                      viewportFraction: 1,
                       autoPlay: true,
                       autoPlayCurve: Curves.easeInQuint
-                      // pauseAutoPlayOnTouch: false,
                       ),
                   carouselController: carouselController,
                 )
@@ -76,7 +71,7 @@ Widget MainScreen(context, controller) {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Expanded(child: Container(child: Image.network(cubit.categoriesItems!.data!.data[index].image, width: 40, height: 40,))),
+                      Expanded(child: Image.network(cubit.categoriesItems!.data!.data[index].image, width: 40, height: 40,)),
                       Text(cubit.categoriesItems!.data!.data[index].name, textAlign: TextAlign.center,),
                     ],
                   ),
@@ -92,195 +87,184 @@ Widget MainScreen(context, controller) {
           const SizedBox(
             height: 30,
           ),
-          SizedBox(
-            height: (homeData!.products.length / 2) * 218,
-            child: ListView.separated(
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) => SizedBox(
-                height: 200,
-                child: ListView.separated(
-                    physics: const NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, idx) => Stack(
-                      alignment: Alignment.topRight,
+          GridView.count(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            childAspectRatio: 1 / 1.4,
+            crossAxisCount: 2,
+            crossAxisSpacing: 25,
+            mainAxisSpacing: 25,
+            children: List.generate(homeData!.products.length, (index) => Stack(
+              alignment: Alignment.topRight,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: const Color(0xFFF8F8EE),
+                      border:
+                      Border.all(color: Colors.grey.shade400)),
+                  child: InkWell(
+                    onTap: () {},
+                    child: Column(
                       children: [
-                        Container(
-                          height: 200,
-                          width: 150,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: const Color(0xFFF8F8EE),
-                              border:
-                              Border.all(color: Colors.grey.shade400)),
-                          child: Stack(
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 8),
+                            child: Image.network((homeData.products[index].image)),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0,),
+                          child: Column(
+                            crossAxisAlignment:
+                            CrossAxisAlignment.start,
                             children: [
-                              InkWell(
-                                onTap: () {},
-                                child: Column(
-                                  children: [
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5.0, vertical: 8),
-                                        child: Image.network(homeData
-                                            .products[(index * 2) + idx].image),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 12.0,
-                                          ),
-                                          child: SizedBox(
-                                            width: 74,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  homeData.products[(index * 2) + idx].name,
-                                                  maxLines: 2,
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                                homeData.products[(index * 2) + idx].discount > 0
-                                                    ? Column(
-                                                    children: [
-                                                  Text(
-                                                      'EGP${homeData.products[(index * 2) + idx].oldPrice.round()}',
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          decoration:
-                                                          TextDecoration
-                                                              .lineThrough,
-                                                          color: Colors
-                                                              .grey
-                                                              .shade500)),
-                                                  RichText(
-                                                      textAlign:
-                                                      TextAlign.start,
-                                                      text: TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                              text:
-                                                              '${homeData.products[(index * 2) + idx].price.round()}',
-                                                              style: const TextStyle(
-                                                                  fontSize:
-                                                                  17,
-                                                                  fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                                  color: Colors
-                                                                      .black)),
-                                                          const TextSpan(
-                                                            text: 'EGP',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                10,
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                        ],
-                                                      ))
-                                                ])
-                                                    : Text(
-                                                  'EGP${homeData.products[(index * 2) + idx].price.round()}',
-                                                  style: const TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                      FontWeight
-                                                          .bold),
-                                                  maxLines: 1,
-                                                  overflow: TextOverflow
-                                                      .ellipsis,
-                                                ),
-                                                // const SizedBox(height: 10,)
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
+                              Text(
+                                homeData.products[index].name,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              Stack(
-                                // alignment: Alignment.center,
-                                children: [
-                                  const ImageIcon(
-                                    AssetImage('assets/icons/discount.png'),
-                                    color: Colors.red,
-                                    size: 28,
-                                  ),
-                                  Column(
+                              SizedBox(height: 5,),
+                              homeData.products[index].discount > 0 ? Column(
+                                  children: [
+                                    Text(
+                                        'EGP${homeData.products[index].oldPrice.round()}',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            decoration:
+                                            TextDecoration
+                                                .lineThrough,
+                                            color: Colors
+                                                .grey
+                                                .shade500)),
+                                    RichText(
+                                        textAlign:
+                                        TextAlign.start,
+                                        text: TextSpan(
+                                          children: [
+                                            TextSpan(
+                                                text:
+                                                '${homeData.products[index].price.round()}',
+                                                style: const TextStyle(
+                                                    fontSize:
+                                                    17,
+                                                    fontWeight:
+                                                    FontWeight
+                                                        .bold,
+                                                    color: Colors
+                                                        .black)),
+                                            const TextSpan(
+                                              text: 'EGP',
+                                              style: TextStyle(
+                                                  fontSize:
+                                                  10,
+                                                  color: Colors
+                                                      .black),
+                                            ),
+                                          ],
+                                        ))
+                                  ]) : RichText(
+                                  textAlign:
+                                  TextAlign.start,
+                                  text: TextSpan(
                                     children: [
-                                      Text('${cubit.homeData!.data!.products[(index * 2) + idx].discount}', style: TextStyle(color: Colors.white, fontSize: 10),),
-                                      const Text('OFF', style: TextStyle(fontSize: 10, color: Colors.white),),
+                                      TextSpan(
+                                          text:
+                                          '${homeData.products[index].price.round()}',
+                                          style: const TextStyle(
+                                              fontSize:
+                                              17,
+                                              fontWeight:
+                                              FontWeight
+                                                  .bold,
+                                              color: Colors
+                                                  .black)),
+                                      const TextSpan(
+                                        text: 'EGP',
+                                        style: TextStyle(
+                                            fontSize:
+                                            10,
+                                            color: Colors
+                                                .black),
+                                      ),
                                     ],
-                                  ),
-                                ],
-                              )
+                                  ))
+                              // const SizedBox(height: 10,)
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: InkWell(
-                            onTap: () {
-                              cubit.changeFav((index * 2) + idx, context);
-                            },
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                const CircleAvatar(
-                                  backgroundColor: Colors.black26,
-                                  radius: 18,
-                                ),
-                                cubit.favItemsIDs.contains(cubit.homeData!.data!.products[(index * 2) + idx].id)
-                                    ? const Icon(
-                                  Icons.favorite,
-                                  color: Colors.red,
-                                )
-                                    : const Icon(
-                                  Icons.favorite_border_outlined,
-                                  color: Colors.white70,
-                                ),
-                              ],
-                            ),
-                          ),
+                        const SizedBox(height: 10,)
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: InkWell(
+                    onTap: () {
+                      cubit.changeFav(index, context);
+                    },
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        const CircleAvatar(
+                          backgroundColor: Colors.black26,
+                          radius: 18,
                         ),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: InkWell(
-                            onTap: () => cubit.addDeleteCartItems(id : cubit.homeData!.data!.products[(index * 2) + idx].id ,context: context, fromCartSaved: false),
-                            child: Container(
-                              height: 40,
-                              width: 45,
-                              decoration: const BoxDecoration(
-                                color: Colors.orangeAccent,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20.0),
-                                    bottomRight: Radius.circular(20.0)),
-                              ),
-                              child: const Icon(Icons.add),
-                            ),
-                          ),
+                        cubit.favItemsIDs.contains(cubit.homeData!.data!.products[index].id)
+                            ? const Icon(
+                          Icons.favorite,
+                          color: Colors.red,
+                        )
+                            : const Icon(
+                          Icons.favorite_border_outlined,
+                          color: Colors.white70,
                         ),
                       ],
                     ),
-                    separatorBuilder: (context, index) => const SizedBox(width: 20),
-                    itemCount: 2
+                  ),
                 ),
-              ),
-              separatorBuilder: (BuildContext context, int index) =>
-                  const SizedBox(
-                height: 18,
-              ),
-              itemCount: (homeData.products.length / 2).floor(),
-            ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: InkWell(
+                    onTap: () => cubit.addDeleteCartItems(id : cubit.homeData!.data!.products[index].id ,context: context, fromCartSaved: false),
+                    child: Container(
+                      height: 40,
+                      width: 45,
+                      decoration: const BoxDecoration(
+                        color: Colors.orangeAccent,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20.0),
+                            bottomRight: Radius.circular(20.0)),
+                      ),
+                      child: const Icon(Icons.add),
+                    ),
+                  ),
+                ),
+                homeData.products[index].discount > 0 ? Positioned(
+                  top: 1, left: 1,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      const ImageIcon(
+                        AssetImage('assets/icons/discount.png'),
+                        color: Colors.red,
+                        size: 28,
+                      ),
+                      Column(
+                        children: [
+                          Text('${cubit.homeData!.data!.products[index].discount}', style: const TextStyle(color: Colors.white, fontSize: 10),),
+                          const Text('OFF', style: TextStyle(fontSize: 10, color: Colors.white),),
+                        ],
+                      ),
+                    ],
+                  ),
+                ) : Container(),
+              ],
+            ),)
           ),
         ],
       ),

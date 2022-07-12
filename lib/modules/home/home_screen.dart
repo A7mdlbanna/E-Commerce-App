@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:shop_app/modules/home/account_screen.dart';
 import 'package:shop_app/modules/home/cart_screen.dart';
+import 'package:shop_app/shared/themes/style/icons.dart';
 import '../../shared/constants.dart';
 import '../../shared/cubit/app_cubit/app_cubit.dart';
 import '../../shared/cubit/app_cubit/app_states.dart';
@@ -31,14 +32,21 @@ class _HomeScreenState extends State<HomeScreen> {
               backgroundColor: const Color(0xFFF8F8EE),
               title: Text(cubit.currentTitle),
               actions: [
-                IconButton(
-                    onPressed: (){
-                    },
-                    icon: const ImageIcon(AssetImage('assets/icons/search.png'))),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: IconButton(
+                      onPressed: (){
+                        Navigator.pushNamed(context, '/SearchScreen');
+                      },
+                      icon: const Icon(MyIcons.Search),
+                  ),
+                )
               ],
               // actions: actions[0],
             ),
             body: BottomBar(
+              hasPageView: true,
+              pageViewController: pageController,
               showIcon: false,
               borderRadius: BorderRadius.circular(500),
               duration: const Duration(milliseconds: 500),

@@ -11,6 +11,7 @@ import 'package:shop_app/shared/cubit/app_cubit/app_states.dart';
 import 'package:shop_app/shared/cubit/theme_cubit/app_theme_cubit.dart';
 import 'package:shop_app/shared/themes/dark_mode.dart';
 import 'package:shop_app/shared/themes/light_mode.dart';
+import 'modules/home/search_screen.dart';
 import 'shared/cubit/starting_cubit/starting_cubit.dart';
 
 import 'modules/home/home_screen.dart';
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
           if(doneLogin){
             return AppCubit()..getHomeData()..getFavItems(context: context)..getProfile(ctx)..getCartItems(context: context, showCartSnack: false)..getCategoriesItems();
           } else {
-            return AppCubit()..getProfile(ctx);
+            return AppCubit();
           }
         }),
       ],
@@ -68,6 +69,7 @@ class MyApp extends StatelessWidget {
             });
           }
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             title: 'E Commerce',
             theme: lightMode,
             darkTheme: darkMode,
@@ -82,6 +84,7 @@ class MyApp extends StatelessWidget {
               '/onBoardingScreen' : (context) => OnBoardingScreen(),
               '/LoginScreen' : (context) => LoginScreen(),
               '/HomeScreen' : (context) => const HomeScreen(),
+              '/SearchScreen' : (context) => const SearchScreen(),
             },
           );
         },

@@ -3,10 +3,17 @@ import 'package:flutter/material.dart';
 //
 class DioHelper {
   static Dio? dio;
+  static Dio? picsDio;
   static init(){
     dio = Dio(
       BaseOptions(
         baseUrl: 'https://student.valuxapps.com/api/',
+        receiveDataWhenStatusError: true,
+      )
+    );
+    picsDio = Dio(
+      BaseOptions(
+        baseUrl: 'https://api.remove.bg/v1.0/',
         receiveDataWhenStatusError: true,
       )
     );
@@ -55,6 +62,19 @@ class DioHelper {
       'Content-Type': 'application/json',
     };
     return dio?.put(
+      url,
+      data: data,
+    );
+  }
+  static Future<Response?> postPNGPic({
+    required String url,
+    data,
+  })async {
+    picsDio?.options.headers = {
+      'Content-Type': 'application/json',
+      'X-Api-Key' : 'JFxF6htjSJCHpgLZXGwFZR6N',
+    };
+    return picsDio?.post(
       url,
       data: data,
     );

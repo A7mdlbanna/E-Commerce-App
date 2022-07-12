@@ -1,14 +1,7 @@
-import 'dart:io';
-import 'package:flutter_login/flutter_login.dart';
-import 'package:http/http.dart' as http;
-import 'package:cross_file/src/types/interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:multipart_request/multipart_request.dart';
-import 'package:network_to_file_image/network_to_file_image.dart';
 import 'package:shop_app/models/home_model.dart';
 import 'package:shop_app/shared/Network/end_points.dart';
-import 'package:shop_app/shared/Network/local/cached_helper.dart';
 import 'package:shop_app/shared/constants.dart';
 import 'package:shop_app/shared/cubit/starting_cubit/starting_cubit.dart';
 import '../../../models/user_login.dart';
@@ -39,10 +32,11 @@ class AppCubit extends Cubit<AppStates> {
   int currentIndex = 0;
   String currentTitle = 'New Arrival';
   void changeIndex(value, PageController controller){
+    // showBottomBar();
+    // _BottomBarState
     controller.animateToPage(value, duration: const Duration(microseconds: 500), curve: Curves.ease);
     currentTitle = titles[value];
     currentIndex = value;
-    emit(HomeChangeIndexState());
     emit(HomeChangeIndexState());
   }
 
@@ -143,6 +137,7 @@ class AppCubit extends Cubit<AppStates> {
   List<int> favItemsIDs = [];
 
   void changeFav(index, context){
+    favItemsIDs.add(homeData!.data!.products[index].id);
     addDeleteFavItems(id : homeData!.data!.products[index].id ,context: context, fromFavSaved: false);
     emit(ChangeFavState());
   }
@@ -219,7 +214,7 @@ class AppCubit extends Cubit<AppStates> {
   Future<void> getProfile(context)async{
     emit(GetProfileLoadingState());
     DioHelper.getData(url: PROFILE, token: token).then((value) async{
-      print(value);
+      debugPrint(value.toString());
       // if(value==null) {
       //   showDialog(context: context, builder: (context){
       //   return AlertDialog(
@@ -256,5 +251,29 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-
+  ////////////////////////////remove bg///////////////////////////////////
+  String removeBG(String url){
+    String? val;
+    DioHelper.postPNGPic(
+        url: 'removebg',
+        data: {
+          'image_url': url,
+          "image_file_b64": "",
+          "size": "preview",
+          "type": "auto",
+          "type_level": "1",
+          "format": "auto",
+          "roi": "0% 0% 100% 100%",
+          "crop": false,
+          "crop_margin": "0",
+          "scale": "original",
+          "position": "original",
+          "channels": "rgba",
+          "add_shadow": false,
+          "semitransparency": true,
+          "bg_color": "",
+          "bg_image_url": ""
+    }).then((value) => val = value?.data);
+    return val!;
+  }
 }

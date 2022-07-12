@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_login/flutter_login.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shop_app/shared/Network/local/cached_helper.dart';
 import 'package:shop_app/shared/cubit/theme_cubit/app_theme_cubit.dart';
 
@@ -98,7 +99,7 @@ class LoginScreen extends StatelessWidget {
           ),
           loginProviders: <LoginProvider>[
             LoginProvider(
-              icon: Icons.add,
+              icon: FontAwesomeIcons.google,
               callback: () async {
                 debugPrint('start google sign in');
                 await Future.delayed(const Duration(milliseconds: 1000));
@@ -106,34 +107,24 @@ class LoginScreen extends StatelessWidget {
                 return null;
               },
             ),
-            // LoginProvider(
-            //   icon: Icon(FaIcon(FontAwesomeIcons.facebookF)),
-            //   label: 'Facebook',
-            //   callback: () async {
-            //     debugPrint('start facebook sign in');
-            //     await Future.delayed(loginTime);
-            //     debugPrint('stop facebook sign in');
-            //     return null;
-            //   },
-            // ),
-            // LoginProvider(
-            //   icon: Icon(FaIcon(FontAwesomeIcons.linkedinIn)),
-            //   callback: () async {
-            //     debugPrint('start linkdin sign in');
-            //     await Future.delayed(loginTime);
-            //     debugPrint('stop linkdin sign in');
-            //     return null;
-            //   },
-            // ),
-            // LoginProvider(
-            //   icon: Icon(FaIcon(FontAwesomeIcon.githubAlt)),
-            //   callback: () async {
-            //     debugPrint('start github sign in');
-            //     await Future.delayed(loginTime);
-            //     debugPrint('stop github sign in');
-            //     return null;
-            //   },
-            // ),
+            LoginProvider(
+              icon: FontAwesomeIcons.facebookF,
+              callback: () async {
+                debugPrint('start facebook sign in');
+                await Future.delayed(const Duration(milliseconds: 1000));
+                debugPrint('stop facebook sign in');
+                return null;
+              },
+            ),
+            LoginProvider(
+              icon: FontAwesomeIcons.linkedinIn,
+              callback: () async {
+                debugPrint('start linkdin sign in');
+                await Future.delayed(const Duration(milliseconds: 1000));
+                debugPrint('stop linkdin sign in');
+                return null;
+              },
+            ),
           ],
         );
       }
